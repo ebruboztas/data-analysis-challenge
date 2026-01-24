@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAYZA | Müşteri Analitiği</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .dashboard-header { 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); 
+            color: white; 
+            padding: 30px; 
+            border-radius: 0 0 20px 20px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+        }
+        .card { border-radius: 15px; border: none; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .stat-card { background: white; padding: 25px; text-align: center; border-bottom: 5px solid #2a5298; }
+        .stat-card h3 { color: #1e3c72; font-weight: bold; }
+        .graph-container { min-height: 500px; }
+        .table-container { max-height: 400px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid px-4">
+        <div class="dashboard-header text-center">
+            <h1>SAYZA Dashboard</h1>
+            <p class="lead">Yapay Zeka Destekli Stratejik Müşteri Segmentasyonu</p>
+        </div>
+        
+        <div class="row mb-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <h5>Analiz Edilen Müşteri</h5>
+                    <h3>{{ toplam_musteri }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card p-4">
+                    <h4 class="mb-4">Müşteri Kümeleme (3D RFM Analizi)</h4>
+                    <div class="graph-container">
+                        {{ grafik|safe }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card p-4">
+                    <h4 class="mb-4">Segment Örneği</h4>
+                    <div class="table-container">
+                        {{ tablo|safe }}
+                    </div>
+                    <p class="text-muted mt-3 small">* Cem'in hazırladığı K-Means (k=4) modeli kullanılmıştır.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
