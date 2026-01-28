@@ -24,6 +24,6 @@ Uygulama, **303 farklı müşterinin** geçmiş alışveriş verilerini (Online 
 4. Tarayıcınızdan `http://127.0.0.1:5000` adresine gidin.
 
 ---
-**Hazırlayan:** Ebru Boztaş
+**Hazırlayan:** Ebru Boztaş Cem Erdemir
 
 
