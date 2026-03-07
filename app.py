@@ -1,34 +1,29 @@
-from flask import Flask, render_template
-import pandas as pd
-import plotly.express as px
-import plotly.io as pio
-
-# Cem'in yazdığı modülleri (motoru) içeri aktarıyoruz
-from data_preparation import load_and_prepare_data
-from normalization import normalize_rfm
-from clustering import apply_kmeans
+from flask import Flask, render_template, url_for, flash, redirect
+from flask_sqlalchemy import SQLAlchemy
+from forms import RegistrationForm, LoginForm
+from models import db, User
+import os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'sayza_gizli_anahtar_123' # Form güvenliği için şart
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db' # Veritabanı dosyası
 
-@app.route('/')
+db.init_app(app)
+
+@app.route("/")
+@app.route("/home")
 def index():
-    # 1. Veriyi yükle (Cem'in 10.000 satır sınırı ile hızlı analiz)
-    rfm = load_and_prepare_data("Online Retail.xlsx", nrows=10000)
-    
-    # 2. Normalizasyon ve K-Means (Cem'in belirlediği k=4 küme ile)
-    rfm_scaled_df = normalize_rfm(rfm)
-    rfm['Cluster'] = apply_kmeans(rfm_scaled_df, k=4)
-    
-    # 3. İnteraktif 3D Grafiği (SAYZA Dashboard için)
-    fig = px.scatter_3d(rfm, x='Recency', y='Frequency', z='Monetary', 
-                        color='Cluster', title='SAYZA: Müşteri Segmentasyonu')
-    graph_html = pio.to_html(fig, full_html=False)
-    
-    # Dashboard verilerini arayüze gönderiyoruz
-    return render_template('index.html', 
-                           tablo=rfm.head(10).to_html(classes='table table-striped'), 
-                           grafik=graph_html,
-                           toplam_musteri=len(rfm))
+    return render_template('index.html')
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'{form.username.data} için hesap oluşturuldu!', 'success')
+        return redirect(url_for('index'))
+    return render_template('register.html', title='Kayıt Ol', form=form)
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all() # Bu komut veritabanını otomatik oluşturur
     app.run(debug=True)
